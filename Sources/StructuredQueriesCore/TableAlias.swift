@@ -111,7 +111,9 @@ public struct TableAlias<
     base[keyPath: keyPath]
   }
 
+  #if !os(WASI)
   @dynamicMemberLookup
+  #endif
   public struct TableColumns: Sendable, TableDefinition {
     public typealias QueryValue = TableAlias
 
@@ -139,6 +141,7 @@ public struct TableAlias<
       #endif
     }
 
+#if !os(WASI)
     public subscript<Member>(
       dynamicMember keyPath: KeyPath<Base.TableColumns, TableColumn<Base, Member>>
     ) -> TableColumn<TableAlias, Member> {
@@ -166,6 +169,7 @@ public struct TableAlias<
         keyPath: \.[member: \Member.self, column: Base.columns[keyPath: keyPath].keyPath]
       )
     }
+#endif
   }
 
   public struct Selection: TableExpression {

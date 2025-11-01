@@ -24,6 +24,7 @@ public protocol TableDraft: Table {
   init(_ primaryTable: PrimaryTable)
 }
 
+#if !os(WASI)
 extension TableDraft {
   public static subscript(
     dynamicMember keyPath: KeyPath<PrimaryTable.Type, some Statement<PrimaryTable>>
@@ -41,6 +42,7 @@ extension TableDraft {
     unsafeBitCast(PrimaryTable.all.asSelect(), to: SelectOf<Self>.self)
   }
 }
+#endif
 
 /// A type representing a database table's columns.
 ///

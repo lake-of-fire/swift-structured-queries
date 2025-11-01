@@ -70,7 +70,11 @@ let package = Package(
     .target(
       name: "StructuredQueriesCore",
       dependencies: [
-        .product(name: "IssueReporting", package: "xctest-dynamic-overlay"),
+        .product(
+          name: "IssueReporting",
+          package: "xctest-dynamic-overlay",
+          condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS])
+        ),
         .product(
           name: "CasePaths",
           package: "swift-case-paths",
@@ -105,7 +109,11 @@ let package = Package(
       name: "StructuredQueriesSQLiteCore",
       dependencies: [
         "StructuredQueriesCore",
-        .product(name: "IssueReporting", package: "xctest-dynamic-overlay"),
+        .product(
+          name: "IssueReporting",
+          package: "xctest-dynamic-overlay",
+          condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS])
+        ),
       ]
     ),
     .macro(
@@ -129,7 +137,11 @@ let package = Package(
       dependencies: [
         "StructuredQueriesMacros",
         "StructuredQueriesSQLiteMacros",
-        .product(name: "IssueReporting", package: "xctest-dynamic-overlay"),
+        .product(
+          name: "IssueReporting",
+          package: "xctest-dynamic-overlay",
+          condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS])
+        ),
         .product(name: "MacroTesting", package: "swift-macro-testing"),
       ]
     ),

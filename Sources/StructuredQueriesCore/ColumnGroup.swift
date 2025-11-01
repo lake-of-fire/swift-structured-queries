@@ -2,7 +2,9 @@
 ///
 /// Don't create instances of this value directly. Instead, use the `@Table` and `@Columns` macros
 /// to generate values of this type.
+#if !os(WASI)
 @dynamicMemberLookup
+#endif
 public struct ColumnGroup<Root: Table, Values: Table>: _TableColumnExpression
 where Values.QueryOutput: Table {
   public typealias Value = Values
@@ -21,6 +23,7 @@ where Values.QueryOutput: Table {
     _allColumns.map(\.queryFragment).joined(separator: ", ")
   }
 
+#if !os(WASI)
   public subscript<Member>(
     dynamicMember keyPath: KeyPath<Values.TableColumns, TableColumn<Values.QueryOutput, Member>>
   ) -> TableColumn<Root, Member> {
@@ -51,6 +54,7 @@ where Values.QueryOutput: Table {
       keyPath: self.keyPath.appending(path: column.keyPath)
     )
   }
+#endif
 
   public var _allColumns: [any TableColumnExpression] {
     Values.QueryOutput.TableColumns.allColumns.map { column in

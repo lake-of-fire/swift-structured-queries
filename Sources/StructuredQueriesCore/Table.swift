@@ -2,7 +2,9 @@
 ///
 /// Don't conform to this protocol directly. Instead, use the `@Table` and `@Column` macros to
 /// generate a conformance. See <doc:DefiningYourSchema> for more information.
+#if !os(WASI)
 @dynamicMemberLookup
+#endif
 public protocol Table: QueryRepresentable, PartialSelectStatement {
   associatedtype QueryValue = Self
 
@@ -123,11 +125,13 @@ extension Table {
   /// #sql("SELECT \(Reminder.id) FROM \(Reminder.self)", as: Int.self)
   /// // SELECT "reminders"."id" FROM "reminders
   /// ```
+#if !os(WASI)
   public static subscript<Member: _TableColumnExpression>(
     dynamicMember keyPath: KeyPath<TableColumns, Member>
   ) -> Member {
     columns[keyPath: keyPath]
   }
+#endif
 
   public var query: QueryFragment {
     func open<Root, Value>(_ column: some TableColumnExpression<Root, Value>) -> QueryFragment {

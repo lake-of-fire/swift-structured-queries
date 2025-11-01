@@ -98,7 +98,9 @@ extension Optional: Table, PartialSelectStatement, Statement where Wrapped: Tabl
     self?[keyPath: keyPath]
   }
 
+  #if !os(WASI)
   @dynamicMemberLookup
+  #endif
   public struct TableColumns: TableDefinition {
     public typealias QueryValue = Optional
 
@@ -138,6 +140,7 @@ extension Optional: Table, PartialSelectStatement, Statement where Wrapped: Tabl
       return Wrapped.TableColumns.writableColumns.map { open($0) }
     }
 
+#if !os(WASI)
     public subscript<Member>(
       dynamicMember keyPath: KeyPath<Wrapped.TableColumns, TableColumn<Wrapped, Member>>
     ) -> TableColumn<Optional, Member?> {
@@ -178,6 +181,7 @@ extension Optional: Table, PartialSelectStatement, Statement where Wrapped: Tabl
     ) -> some QueryExpression<QueryValue?> {
       Wrapped.columns[keyPath: keyPath]
     }
+#endif
   }
 
   public typealias Selection = Wrapped.Selection?

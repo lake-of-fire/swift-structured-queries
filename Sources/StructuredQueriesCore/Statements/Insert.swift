@@ -1,4 +1,7 @@
+
+#if canImport(IssueReporting)
 import IssueReporting
+#endif
 
 extension Table {
   /// Columns referencing the value that would have been inserted in an
@@ -881,15 +884,17 @@ extension Insert: Statement {
     if !returning.isEmpty {
       query.append("\(.newlineOrSpace)RETURNING \(returning.joined(separator: ", "))")
     }
-    if hasInvalidWhere {
-      reportIssue(
-        """
-        Insert statement has invalid update 'where': \(updateFilter.joined(separator: " AND "))
+    #if canImport(IssueReporting)
+      if hasInvalidWhere {
+        reportIssue(
+          """
+          Insert statement has invalid update 'where': \(updateFilter.joined(separator: " AND "))
 
-        \(query)
-        """
-      )
-    }
+          \(query)
+          """
+        )
+      }
+    #endif
     return query
   }
 }

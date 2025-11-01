@@ -1,5 +1,7 @@
 import Foundation
+#if canImport(IssueReporting)
 import IssueReporting
+#endif
 
 /// A type representing a SQL string and its bindings.
 ///
@@ -169,18 +171,20 @@ extension QueryFragment: ExpressibleByStringInterpolation {
         case .double(let double):
           $0.append("\(raw: double)")
         case .date(let date):
-          reportIssue(
-            """
-            Swift Date values should not be bound to a '\(statementType)' statement. Specify dates \
-            using the '#sql' macro, instead. For example, the current date:
+          #if canImport(IssueReporting)
+            reportIssue(
+              """
+              Swift Date values should not be bound to a '\(statementType)' statement. Specify dates \
+              using the '#sql' macro, instead. For example, the current date:
 
-                #sql("datetime()")
+                  #sql("datetime()")
 
-            Or a constant date:
+              Or a constant date:
 
-                #sql("'2018-01-29 00:08:00'")
-            """
-          )
+                  #sql("'2018-01-29 00:08:00'")
+              """
+            )
+          #endif
           $0.append("\(quote: date.iso8601String, delimiter: .text)")
         case .int(let int):
           $0.append("\(raw: int)")
@@ -191,18 +195,20 @@ extension QueryFragment: ExpressibleByStringInterpolation {
         case .uint(let uint):
           $0.append("\(raw: uint)")
         case .uuid(let uuid):
-          reportIssue(
-            """
-            Swift UUID values should not be bound to a '\(statementType)' statement. Specify UUIDs \
-            using the '#sql' macro, instead. For example, a random UUID:
+          #if canImport(IssueReporting)
+            reportIssue(
+              """
+              Swift UUID values should not be bound to a '\(statementType)' statement. Specify UUIDs \
+              using the '#sql' macro, instead. For example, a random UUID:
 
-                #sql("uuid()")
+                  #sql("uuid()")
 
-            Or a constant UUID:
+              Or a constant UUID:
 
-                #sql("'00000000-0000-0000-0000-000000000000'")
-            """
-          )
+                  #sql("'00000000-0000-0000-0000-000000000000'")
+              """
+            )
+          #endif
           $0.append("\(quote: uuid.uuidString.lowercased(), delimiter: .text)")
         case .invalid(let error):
           $0.append("\(.invalid(error.underlyingError))")

@@ -1,5 +1,7 @@
 import Foundation
+#if canImport(IssueReporting)
 import IssueReporting
+#endif
 
 extension QueryFragment {
   @inlinable
